@@ -1,0 +1,61 @@
+##### 6.3 Dataset: hub + 6 delivery locations; symmetric cost matrix #####
+        Hub    A    B    C    D    E    F
+  Hub     0   12   29   22   13   24   18
+    A    12    0   19    3   25    6   21
+    B    29   19    0   21   23   28    8
+    C    22    3   21    0    4   14   17
+    D    13   25   23    4    0   16   26
+    E    24    6   28   14   16    0    9
+    F    18   21    8   17   26    9    0
+
+Optimal route : Hub -> D -> C -> A -> E -> F -> B -> Hub
+Visit order   : ['D', 'C', 'A', 'E', 'F', 'B']
+Minimum Travel Cost = 72 | DP info: {'states': 192, 'transitions': 480, 'table_entries': 384}
+Leg costs     : [13, 4, 3, 6, 9, 8, 29]
+
+##### 6.4 Validation: hub + 4 delivery locations (24 routes) #####
+  Hub -> B -> A -> C -> D -> Hub   cost = 68
+  Hub -> D -> C -> A -> B -> Hub   cost = 68
+  Hub -> A -> B -> C -> D -> Hub   cost = 69
+  Hub -> D -> C -> B -> A -> Hub   cost = 69
+  Hub -> A -> C -> D -> B -> Hub   cost = 71
+  Hub -> B -> D -> C -> A -> Hub   cost = 71
+  Hub -> A -> C -> B -> D -> Hub   cost = 72
+  Hub -> D -> B -> C -> A -> Hub   cost = 72
+  Hub -> A -> B -> D -> C -> Hub   cost = 80
+  Hub -> C -> A -> B -> D -> Hub   cost = 80
+  Hub -> C -> D -> B -> A -> Hub   cost = 80
+  Hub -> D -> B -> A -> C -> Hub   cost = 80
+  Hub -> A -> D -> C -> B -> Hub   cost = 91
+  Hub -> B -> C -> A -> D -> Hub   cost = 91
+  Hub -> B -> C -> D -> A -> Hub   cost = 91
+  Hub -> D -> A -> C -> B -> Hub   cost = 91
+  Hub -> B -> A -> D -> C -> Hub   cost = 99
+  Hub -> C -> D -> A -> B -> Hub   cost = 99
+  Hub -> C -> B -> A -> D -> Hub   cost = 100
+  Hub -> D -> A -> B -> C -> Hub   cost = 100
+  Hub -> B -> D -> A -> C -> Hub   cost = 102
+  Hub -> C -> A -> D -> B -> Hub   cost = 102
+  Hub -> A -> D -> B -> C -> Hub   cost = 103
+  Hub -> C -> B -> D -> A -> Hub   cost = 103
+Exhaustive optimum = 68 via Hub -> B -> A -> C -> D -> Hub
+DP optimum         = 68 via Hub -> D -> C -> A -> B -> Hub
+Match: True
+Extra validation: 300 random instances (2..7 deliveries) -> mismatches = 0
+
+##### 6.5 State-space growth #####
+  n   DP states   transitions  table entries   time (s)  peak mem (MB)
+  4          32            48             64      0.000            0.0
+  5          80           160            160      0.000            0.0
+  6         192           480            384      0.001            0.0
+  7         448          1344            896      0.003            0.0
+  8        1024          3584           2048      0.008            0.1
+  9        2304          9216           4608      0.029            0.1
+ 10        5120         23040          10240      0.080            0.3
+ 11       11264         56320          22528      0.214            0.7
+ 12       24576        135168          49152      0.560            1.4
+ 13       53248        319488         106496      1.409            2.9
+ 14      114688        745472         229376      3.246            6.0
+
+Permutations an exhaustive search would need: n! -> {4: 24, 8: 40320, 12: 479001600, 14: 87178291200}
+Subsets of n locations: 2^n -> {4: 16, 8: 256, 12: 4096, 14: 16384, 20: 1048576} | 2^200 = 1.61e+60

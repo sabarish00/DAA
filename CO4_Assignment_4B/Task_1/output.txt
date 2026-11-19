@@ -1,0 +1,116 @@
+TEXT: Dynamic programming solves complex problems by breaking them into overlapping subproblems and storing every answer (15 words)
+
+##### 1.1 / 1.2 Baseline run with DP states (width 20) #####
+=== width = 20 ===
+DP states (i = first word of suffix, j = first word of NEXT line):
+  state i=14 ('answer')
+    line=words[14..14] penalty=  0 best[15]=  0 total=  0 <== chosen
+  state i=13 ('every')
+    line=words[13..13] penalty=225 best[14]=  0 total=225
+    line=words[13..14] penalty=  0 best[15]=  0 total=  0 <== chosen
+  state i=12 ('storing')
+    line=words[12..12] penalty=169 best[13]=  0 total=169
+    line=words[12..13] penalty= 49 best[14]=  0 total= 49
+    line=words[12..14] penalty=  0 best[15]=  0 total=  0 <== chosen
+  state i=11 ('and')
+    line=words[11..11] penalty=289 best[12]=  0 total=289
+    line=words[11..12] penalty= 81 best[13]=  0 total= 81
+    line=words[11..13] penalty=  9 best[14]=  0 total=  9 <== chosen
+  state i=10 ('subproblems')
+    line=words[10..10] penalty= 81 best[11]=  9 total= 90
+    line=words[10..11] penalty= 25 best[12]=  0 total= 25 <== chosen
+  state i=9 ('overlapping')
+    line=words[9..9] penalty= 81 best[10]= 25 total=106 <== chosen
+  state i=8 ('into')
+    line=words[8..8] penalty=256 best[9]=106 total=362
+    line=words[8..9] penalty= 16 best[10]= 25 total= 41 <== chosen
+  state i=7 ('them')
+    line=words[7..7] penalty=256 best[8]= 41 total=297
+    line=words[7..8] penalty=121 best[9]=106 total=227 <== chosen
+  state i=6 ('breaking')
+    line=words[6..6] penalty=144 best[7]=227 total=371
+    line=words[6..7] penalty= 49 best[8]= 41 total= 90 <== chosen
+    line=words[6..8] penalty=  4 best[9]=106 total=110
+  state i=5 ('by')
+    line=words[5..5] penalty=324 best[6]= 90 total=414
+    line=words[5..6] penalty= 81 best[7]=227 total=308
+    line=words[5..7] penalty= 16 best[8]= 41 total= 57 <== chosen
+  state i=4 ('problems')
+    line=words[4..4] penalty=144 best[5]= 57 total=201
+    line=words[4..5] penalty= 81 best[6]= 90 total=171 <== chosen
+    line=words[4..6] penalty=  0 best[7]=227 total=227
+  state i=3 ('complex')
+    line=words[3..3] penalty=169 best[4]=171 total=340
+    line=words[3..4] penalty= 16 best[5]= 57 total= 73 <== chosen
+    line=words[3..5] penalty=  1 best[6]= 90 total= 91
+  state i=2 ('solves')
+    line=words[2..2] penalty=196 best[3]= 73 total=269
+    line=words[2..3] penalty= 36 best[4]=171 total=207 <== chosen
+  state i=1 ('programming')
+    line=words[1..1] penalty= 81 best[2]=207 total=288
+    line=words[1..2] penalty=  4 best[3]= 73 total= 77 <== chosen
+  state i=0 ('Dynamic')
+    line=words[0..0] penalty=169 best[1]= 77 total=246
+    line=words[0..1] penalty=  1 best[2]=207 total=208 <== chosen
+  best[]   = [208, 77, 207, 73, 171, 57, 90, 227, 41, 106, 25, 9, 0, 0, 0, 0]
+  choice[] = [2, 3, 4, 5, 6, 8, 8, 9, 10, 10, 12, 14, 15, 15, 15, -1]
+Line Words on line          Unused  Penalty
+1    Dynamic programming         1        1
+2    solves complex              6       36
+3    problems by                 9       81
+4    breaking them               7       49
+5    into overlapping            4       16
+6    subproblems and             5       25
+7    storing every answer        0        0
+Minimum total penalty = 208
+
+##### 1.3 Requirement change: three further widths #####
+=== width = 26 ===
+Line Words on line                Unused  Penalty
+1    Dynamic programming               7       49
+2    solves complex problems           3        9
+3    by breaking them into             5       25
+4    overlapping subproblems           3        9
+5    and storing every answer          2        0
+Minimum total penalty = 92
+
+PREDICTED: arrangement changes; first change at line 1; penalty decrease
+ACTUAL   : arrangement changes; first change at line 2; penalty 208 -> 92 (decrease)
+
+=== width = 32 ===
+Line Words on line                      Unused  Penalty
+1    Dynamic programming solves              6       36
+2    complex problems by breaking            4       16
+3    them into overlapping                  11      121
+4    subproblems and storing every           3        9
+5    answer                                 26        0
+Minimum total penalty = 182
+
+PREDICTED: arrangement changes; first change at line 1; penalty decrease
+ACTUAL   : arrangement changes; first change at line 1; penalty 208 -> 182 (decrease)
+
+=== width = 40 ===
+Line Words on line                              Unused  Penalty
+1    Dynamic programming solves complex              6       36
+2    problems by breaking them into                 10      100
+3    overlapping subproblems and storing             5       25
+4    every answer                                   28        0
+Minimum total penalty = 161
+
+PREDICTED: arrangement changes; first change at line 1; penalty decrease
+ACTUAL   : arrangement changes; first change at line 1; penalty 208 -> 161 (decrease)
+
+##### 1.4 Boundary tests #####
+Boundary case: words = ['aaa', 'bbb', 'cc'] , width = 7 (exact fit 'aaa bbb' + short final line)
+=== width = 7 ===
+Line Words on line Unused  Penalty
+1    aaa bbb        0        0
+2    cc             5        0
+Minimum total penalty = 0
+
+case [] 5 -> 0
+case ['x'] 1 -> 0
+case ['abcdefgh'] 5 -> ValueError: word 'abcdefgh' (length 8) is longer than width 5
+
+##### Validation against exhaustive search (500 random cases) #####
+500/500 random cases: DP penalty == brute-force penalty

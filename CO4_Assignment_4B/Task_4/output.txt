@@ -1,0 +1,85 @@
+INPUT a1 = [7, 9, 3, 4, 8, 4]  a2 = [8, 5, 6, 4, 5, 7]  t1 = [2, 3, 1, 3, 4]  t2 = [2, 1, 2, 2, 1]  e1,e2 = 2 4  x1,x2 = 3 2 
+
+--- 4.1 / 4.2 Baseline ---
+Stn  L1 stay L1 xfer       Sel  L2 stay L2 xfer       Sel  f1  f2
+1          -       -     Entry        -       -     Entry  9   12  (e1+a1[1]=2+7, e2+a2[1]=4+8)
+2         18      23      Stay       17      16  Transfer  18  16 
+3         21      20  Transfer       22      27      Stay  20  22 
+4         24      28      Stay       26      25  Transfer  24  25 
+5         32      35      Stay       30      32      Stay  32  30 
+6         36      35  Transfer       37      43      Stay  35  37 
+Exit options: Line1 35+3=38 | Line2 37+2=39
+Lines chosen per station : [1, 2, 1, 2, 2, 1]
+Transfer points          : ['after station 1: L1->L2', 'after station 2: L2->L1', 'after station 3: L1->L2', 'after station 5: L2->L1']
+Entry
+  |
+Line 1 - Station 1
+  | Transfer (Line 1 -> Line 2)
+Line 2 - Station 2
+  | Transfer (Line 2 -> Line 1)
+Line 1 - Station 3
+  | Transfer (Line 1 -> Line 2)
+Line 2 - Station 4
+  |
+Line 2 - Station 5
+  | Transfer (Line 2 -> Line 1)
+Line 1 - Station 6
+  |
+Exit
+Minimum Production Time = 38 
+
+=== 4.3 PREDICT BEFORE YOU EXECUTE ===
+Change: t1[3] (Line1 station 3 -> Line2 station 4) from 1 to 15.
+PREDICTION: route WILL change; the transfer L1->L2 before station 4 is the decision affected (the baseline
+  uses it); the optimiser should stay on Line 2 or find another switch; total time will INCREASE above 38.
+
+--- 4.3 Modified transfer time ---
+Stn  L1 stay L1 xfer       Sel  L2 stay L2 xfer       Sel  f1  f2
+1          -       -     Entry        -       -     Entry  9   12  (e1+a1[1]=2+7, e2+a2[1]=4+8)
+2         18      23      Stay       17      16  Transfer  18  16 
+3         21      20  Transfer       22      27      Stay  20  22 
+4         24      28      Stay       26      39      Stay  24  26 
+5         32      36      Stay       31      32      Stay  32  31 
+6         36      36      Stay       38      43      Stay  36  38 
+Exit options: Line1 36+3=39 | Line2 38+2=40
+Lines chosen per station : [1, 2, 1, 1, 1, 1]
+Transfer points          : ['after station 1: L1->L2', 'after station 2: L2->L1']
+Minimum Production Time = 39 
+
+ACTUAL: route changed: True | total 38 -> 39 ( increase )
+
+=== 4.4 PRODUCTION DISRUPTION ===
+Station 3 on Line 1 slows from 3 to 25 (temporary fault).
+--- 4.4 Disruption ---
+Stn  L1 stay L1 xfer       Sel  L2 stay L2 xfer       Sel  f1  f2
+1          -       -     Entry        -       -     Entry  9   12  (e1+a1[1]=2+7, e2+a2[1]=4+8)
+2         18      23      Stay       17      16  Transfer  18  16 
+3         43      42  Transfer       22      27      Stay  42  22 
+4         46      28  Transfer       26      47      Stay  28  26 
+5         36      36      Stay       31      36      Stay  36  31 
+6         40      36  Transfer       38      47      Stay  36  38 
+Exit options: Line1 36+3=39 | Line2 38+2=40
+Lines chosen per station : [1, 2, 2, 2, 2, 1]
+Transfer points          : ['after station 1: L1->L2', 'after station 5: L2->L1']
+Entry
+  |
+Line 1 - Station 1
+  | Transfer (Line 1 -> Line 2)
+Line 2 - Station 2
+  |
+Line 2 - Station 3
+  |
+Line 2 - Station 4
+  |
+Line 2 - Station 5
+  | Transfer (Line 2 -> Line 1)
+Line 1 - Station 6
+  |
+Exit
+Minimum Production Time = 39 
+
+Baseline route: [1, 2, 1, 2, 2, 1] -> New route: [1, 2, 2, 2, 2, 1] | first changed station: 3 | total 38 -> 39
+
+=== Boundary / failure tests ===
+single station: (6, [2])
+invalid input -> inconsistent input sizes

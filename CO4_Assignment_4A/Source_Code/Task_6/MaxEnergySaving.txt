@@ -1,0 +1,55 @@
+ALGORITHM MaxEnergySaving(JobID[1..n], Start[1..n], Finish[1..n], Value[1..n])
+INPUT:
+    n jobs with Start[i] < Finish[i], Value[i] > 0
+    (jobs touching at an end-point are NOT overlapping)
+OUTPUT:
+    BestValue - maximum total energy-saving value
+    Selected  - list of selected job IDs in time order
+BEGIN
+    // preprocessing: order jobs by finish time
+    Order <- indices 1..n SORTED in ascending order of Finish[i]
+    FOR k <- 1 TO n DO
+        ID[k] <- JobID[Order[k]];  S[k] <- Start[Order[k]]
+        F[k] <- Finish[Order[k]];  Val[k] <- Value[Order[k]]
+    END FOR
+    // compatible predecessor p(k) by binary search on F[] (non-decreasing)
+    FOR k <- 1 TO n DO
+        P[k] <- 0
+        Low <- 1;  High <- k - 1
+        WHILE Low <= High DO
+            Mid <- FLOOR((Low + High) / 2)
+            IF F[Mid] <= S[k] THEN              // job Mid is compatible with job k
+                P[k] <- Mid
+                Low <- Mid + 1                  // look for a later compatible job
+            ELSE
+                High <- Mid - 1
+            END IF
+        END WHILE
+    END FOR
+    // initialisation and state updates
+    OPT[0] <- 0
+    FOR k <- 1 TO n DO
+        SkipValue <- OPT[k - 1]                 // reject job k
+        TakeValue <- Val[k] + OPT[P[k]]         // accept job k, keep only compatible jobs
+        IF TakeValue > SkipValue THEN
+            OPT[k] <- TakeValue
+            Choice[k] <- TAKE
+        ELSE
+            OPT[k] <- SkipValue
+            Choice[k] <- SKIP
+        END IF
+    END FOR
+    // reconstruction
+    Selected <- empty list
+    k <- n
+    WHILE k >= 1 DO
+        IF Choice[k] = TAKE THEN
+            APPEND ID[k] to Selected
+            k <- P[k]                           // jump over all jobs that overlap job k
+        ELSE
+            k <- k - 1
+        END IF
+    END WHILE
+    REVERSE Selected
+    RETURN OPT[n], Selected
+END

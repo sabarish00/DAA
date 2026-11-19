@@ -1,0 +1,60 @@
+NETWORK 1 (distinct weights): ['A-B(4)', 'A-C(8)', 'B-C(6)', 'B-D(11)', 'C-D(3)', 'C-E(9)', 'D-E(5)', 'D-F(12)', 'E-F(2)', 'E-G(10)', 'F-G(7)', 'F-H(13)', 'G-H(1)'] 
+
+---- Kruskal (sort edges; next safe edge = lightest edge joining two different components) ----
+  consider G-H(1)   -> ACCEPT (joins two components)
+  consider E-F(2)   -> ACCEPT (joins two components)
+  consider C-D(3)   -> ACCEPT (joins two components)
+  consider A-B(4)   -> ACCEPT (joins two components)
+  consider D-E(5)   -> ACCEPT (joins two components)
+  consider B-C(6)   -> ACCEPT (joins two components)
+  consider F-G(7)   -> ACCEPT (joins two components)
+  consider A-C(8)   -> REJECT (would form a cycle)
+  consider C-E(9)   -> REJECT (would form a cycle)
+  consider E-G(10)  -> REJECT (would form a cycle)
+  consider B-D(11)  -> REJECT (would form a cycle)
+  consider D-F(12)  -> REJECT (would form a cycle)
+  consider F-H(13)  -> REJECT (would form a cycle)
+  MST: ['A-B(4)', 'B-C(6)', 'C-D(3)', 'D-E(5)', 'E-F(2)', 'F-G(7)', 'G-H(1)'] total = 28 
+  state kept: sorted edge list + union-find (component labels)
+
+---- Prim from A (grow one tree; next safe edge = lightest edge leaving the tree) ----
+  start at A; frontier = [(4, 'A-B'), (8, 'A-C')]
+  add A-B(4)   (new vertex B); tree vertices = ['A', 'B']
+  add B-C(6)   (new vertex C); tree vertices = ['A', 'B', 'C']
+  add C-D(3)   (new vertex D); tree vertices = ['A', 'B', 'C', 'D']
+  add D-E(5)   (new vertex E); tree vertices = ['A', 'B', 'C', 'D', 'E']
+  add E-F(2)   (new vertex F); tree vertices = ['A', 'B', 'C', 'D', 'E', 'F']
+  add F-G(7)   (new vertex G); tree vertices = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+  add G-H(1)   (new vertex H); tree vertices = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+  MST: ['A-B(4)', 'B-C(6)', 'C-D(3)', 'D-E(5)', 'E-F(2)', 'F-G(7)', 'G-H(1)'] total = 28 
+  state kept: visited set + priority queue of frontier edges
+
+---- Boruvka (all components pick their cheapest outgoing edge each round) ----
+  round 1: cheapest edge per component = {'A': 'A-B(4)', 'B': 'A-B(4)', 'C': 'C-D(3)', 'D': 'C-D(3)', 'E': 'E-F(2)', 'F': 'E-F(2)', 'G': 'G-H(1)', 'H': 'G-H(1)'}
+           edges added = ['A-B(4)', 'C-D(3)', 'E-F(2)', 'G-H(1)']; components left = 4
+  round 2: cheapest edge per component = {'B': 'B-C(6)', 'D': 'D-E(5)', 'F': 'D-E(5)', 'H': 'F-G(7)'}
+           edges added = ['B-C(6)', 'D-E(5)', 'F-G(7)']; components left = 1
+  MST: ['A-B(4)', 'B-C(6)', 'C-D(3)', 'D-E(5)', 'E-F(2)', 'F-G(7)', 'G-H(1)'] total = 28 
+  state kept: component label per vertex + cheapest-edge slot per component
+
+Same MST from all three: True
+Brute force: minimum spanning cost = 28, number of minimum spanning trees = 1
+
+==========================================================================================
+NETWORK 2 (ties introduced: A-C = 6 ties with B-C = 6; E-G = 7 ties with F-G = 7)
+['A-B(4)', 'A-C(6)', 'B-C(6)', 'B-D(11)', 'C-D(3)', 'C-E(9)', 'D-E(5)', 'D-F(12)', 'E-F(2)', 'E-G(7)', 'F-G(7)', 'F-H(13)', 'G-H(1)']
+Brute force: min cost = 28; number of distinct MSTs = 4
+   ('A-B(4)', 'A-C(6)', 'C-D(3)', 'D-E(5)', 'E-F(2)', 'E-G(7)', 'G-H(1)')
+   ('A-B(4)', 'A-C(6)', 'C-D(3)', 'D-E(5)', 'E-F(2)', 'F-G(7)', 'G-H(1)')
+   ('A-B(4)', 'B-C(6)', 'C-D(3)', 'D-E(5)', 'E-F(2)', 'E-G(7)', 'G-H(1)')
+   ('A-B(4)', 'B-C(6)', 'C-D(3)', 'D-E(5)', 'E-F(2)', 'F-G(7)', 'G-H(1)')
+
+Results of each algorithm / tie-breaking rule:
+  Kruskal (ties: earlier edge first)     cost=28 edges=['A-B(4)', 'A-C(6)', 'C-D(3)', 'D-E(5)', 'E-F(2)', 'E-G(7)', 'G-H(1)'] valid MST: True
+  Kruskal (ties: later edge first)       cost=28 edges=['A-B(4)', 'B-C(6)', 'C-D(3)', 'D-E(5)', 'E-F(2)', 'F-G(7)', 'G-H(1)'] valid MST: True
+  Prim from A                            cost=28 edges=['A-B(4)', 'A-C(6)', 'C-D(3)', 'D-E(5)', 'E-F(2)', 'E-G(7)', 'G-H(1)'] valid MST: True
+  Prim from H                            cost=28 edges=['A-B(4)', 'A-C(6)', 'C-D(3)', 'D-E(5)', 'E-F(2)', 'E-G(7)', 'G-H(1)'] valid MST: True
+  Boruvka (ties: lower edge index)       cost=28 edges=['A-B(4)', 'A-C(6)', 'C-D(3)', 'D-E(5)', 'E-F(2)', 'E-G(7)', 'G-H(1)'] valid MST: True
+  Boruvka (ties: higher edge index)      cost=28 edges=['A-B(4)', 'B-C(6)', 'C-D(3)', 'D-E(5)', 'E-F(2)', 'F-G(7)', 'G-H(1)'] valid MST: True
+
+Distinct edge sets produced: 2 (all with cost 28)

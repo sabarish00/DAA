@@ -1,0 +1,32 @@
+########## 2.1 NORMAL CASE (capacity 40) ##########
+Items (id, weight, value): [('L1', 12, 36), ('L2', 8, 32), ('L3', 20, 50), ('L4', 10, 45), ('L5', 15, 30)]
+Solution A - Fractional Knapsack decision sequence:
+  consider L4: w=10 v=45 ratio=4.50 remaining=40 -> take 1.00
+  consider L2: w=8 v=32 ratio=4.00 remaining=30 -> take 1.00
+  consider L1: w=12 v=36 ratio=3.00 remaining=22 -> take 1.00
+  consider L3: w=20 v=50 ratio=2.50 remaining=10 -> take 0.50
+  Selected: L4 x 1.00, L2 x 1.00, L1 x 1.00, L3 x 0.50   Value = 138.0   ops = {'comparisons': 7, 'selection_steps': 5, 'memory_cells': 5}
+Solution B - 0/1 DP: items ['L2', 'L3', 'L4']   Value = 127   ops = {'cell_updates': 205, 'memory_cells': 246}
+(Fractional optimum is an upper bound for 0/1: 138 >= 127)
+
+########## 2.2 BREAK THE GREEDY INTUITION (own instance, capacity 10) ##########
+Items: [('A', 6, 13), ('B', 5, 10), ('C', 5, 10)] ratios: A=2.17 B=2.00 C=2.00
+Greedy order by ratio: ['A', 'B', 'C']
+Greedy 0/1 picks ['A'] value = 13
+DP optimum picks ['B', 'C'] value = 20
+Gap = 7 (greedy achieves 65.0% of optimum)
+Fractional relaxation value (upper bound): 21.0
+First harmful commitment: greedy takes A (best ratio 2.17) -> remaining capacity 4,
+  which fits neither B nor C, so 4 units of capacity are wasted and B+C (value 20) is lost.
+
+########## 2.3 ENGINEERING COMPARISON (capacity 1000, random instances) ##########
+    n  greedy cmp  greedy mem  DP cell upd  DP mem cells  greedy01   DP opt   frac UB  quality%
+   10          23          10        10010         11011      1355     1355    1355.0    100.00
+   50         216          50        50050         51051      4068     4068    4072.9    100.00
+  100         523         100       100100        101101      7968     7993    7998.4     99.69
+  200        1262         200       200200        201201      8245     8252    8267.3     99.92
+  400        2934         400       400400        401401     11247    11258   11260.7     99.90
+
+########## 2.4 CHANGED REQUIREMENT - quality of greedy 0/1 over many instances ##########
+small (n=4..8)       trials=300 mean quality=97.19% worst=63.49% exactly optimal in 208/300
+large (n=100..200)   trials=300 mean quality=99.88% worst=99.44% exactly optimal in 77/300

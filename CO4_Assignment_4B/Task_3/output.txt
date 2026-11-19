@@ -1,0 +1,87 @@
+GRAPH (directed): vertices ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+Edges: [('A', 'B', 6), ('A', 'C', 2), ('C', 'D', 3), ('D', 'E', 4), ('C', 'E', 8), ('B', 'F', 1), ('F', 'H', 2), ('E', 'F', 7), ('E', 'G', 3), ('G', 'H', 5), ('D', 'G', 10), ('F', 'G', 4)] -> 8 vertices, 12 edges
+
+################ STAGE A - Dijkstra from A (normal routing) ################
+Shortest paths:
+Vertex Distance  Pred  Path
+A      0         None  A
+B      6         A     A -> B
+C      2         A     A -> C
+D      5         C     A -> C -> D
+E      9         D     A -> C -> D -> E
+F      7         B     A -> B -> F
+G      11        F     A -> B -> F -> G
+H      9         F     A -> B -> F -> H
+Order in which vertices are finalised: A(0), C(2), D(5), B(6), F(7), E(9), H(9), G(11)
+
+################ STAGE B - negative edge E->B (-5) ################
+PREDICTION (before running): Dijkstra will NOT stay valid. B is finalised at 6 (via A) before E (9) is
+  processed; the new edge E->B gives B = 9-5 = 4, but B is already final. Expected wrong vertices:
+  B and everything routed through B (F, H, G).
+Dijkstra on modified graph:
+Vertex Distance  Pred  Path
+A      0         None  A
+B      6         A     A -> B
+C      2         A     A -> C
+D      5         C     A -> C -> D
+E      9         D     A -> C -> D -> E
+F      7         B     A -> B -> F
+G      11        F     A -> B -> F -> G
+H      9         F     A -> B -> F -> H
+Finalisation order: A(0), C(2), D(5), B(6), F(7), E(9), H(9), G(11)
+
+Bellman-Ford on modified graph:
+Vertex Distance  Pred  Path
+A      0         None  A
+B      4         E     A -> C -> D -> E -> B
+C      2         A     A -> C
+D      5         C     A -> C -> D
+E      9         D     A -> C -> D -> E
+F      5         B     A -> C -> D -> E -> B -> F
+G      9         F     A -> C -> D -> E -> B -> F -> G
+H      7         F     A -> C -> D -> E -> B -> F -> H
+Negative cycle: None (passes used: 3)
+
+Comparison (Dijkstra vs Bellman-Ford):
+  A: Dijkstra=0  Bellman-Ford=0
+  B: Dijkstra=6  Bellman-Ford=4   <== Dijkstra WRONG
+  C: Dijkstra=2  Bellman-Ford=2
+  D: Dijkstra=5  Bellman-Ford=5
+  E: Dijkstra=9  Bellman-Ford=9
+  F: Dijkstra=7  Bellman-Ford=5   <== Dijkstra WRONG
+  G: Dijkstra=11  Bellman-Ford=9   <== Dijkstra WRONG
+  H: Dijkstra=9  Bellman-Ford=7   <== Dijkstra WRONG
+
+################ STAGE C - reachable negative cycle (add G->E -5) ################
+Dijkstra still 'terminates' and returns misleading numbers: {'A': 0, 'B': 6, 'C': 2, 'D': 5, 'E': 9, 'F': 7, 'G': 11, 'H': 9}
+Bellman-Ford: NEGATIVE-WEIGHT CYCLE DETECTED on pass 8 - shortest paths are undefined.
+Cycle: G -> E -> B -> F -> G
+Cycle weight: -5
+Detection rule: after |V|-1 passes every shortest path is final; if any edge still relaxes on pass |V|, a
+  negative cycle is reachable. The cycle is recovered by walking predecessors |V| steps back and then until a repeat.
+
+################ STAGE D - all pairs (graph with the negative edge, no cycle) ################
+Floyd distance matrix:
+         A    B    C    D    E    F    G    H
+   A     0    4    2    5    9    5    9    7
+   B   INF    0  INF  INF  INF    1    5    3
+   C   INF    2    0    3    7    3    7    5
+   D   INF   -1  INF    0    4    0    4    2
+   E   INF   -5  INF  INF    0   -4    0   -2
+   F   INF  INF  INF  INF  INF    0    4    2
+   G   INF  INF  INF  INF  INF  INF    0    5
+   H   INF  INF  INF  INF  INF  INF  INF    0
+Negative values on diagonal (would mean negative cycle): none
+
+Warshall reachability matrix (1 = reachable):
+         A    B    C    D    E    F    G    H
+   A     1    1    1    1    1    1    1    1
+   B     0    1    0    0    0    1    1    1
+   C     0    1    1    1    1    1    1    1
+   D     0    1    0    1    1    1    1    1
+   E     0    1    0    0    1    1    1    1
+   F     0    0    0    0    0    1    1    1
+   G     0    0    0    0    0    0    1    1
+   H     0    0    0    0    0    0    0    1
+
+Floyd on the cycle graph, diagonal check: ['B', 'E', 'F', 'G'] have negative D[i][i]

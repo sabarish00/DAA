@@ -1,0 +1,34 @@
+ALGORITHM FractionalLoad(Weight[1..n], Value[1..n], Capacity)
+INPUT:
+    Weight[i] > 0   - weight of package i
+    Value[i] >= 0   - value of package i
+    Capacity >= 0   - carrying capacity of the vehicle
+OUTPUT:
+    Fraction[i] in [0,1] - portion of package i loaded
+    TotalValue           - total value loaded
+BEGIN
+    FOR i <- 1 TO n DO
+        Ratio[i] <- Value[i] / Weight[i]
+        Fraction[i] <- 0
+    END FOR
+    Order <- indices 1..n SORTED in descending order of Ratio[i]
+             (ties: smaller index first)
+    Remaining <- Capacity
+    TotalValue <- 0
+    FOR k <- 1 TO n DO
+        IF Remaining = 0 THEN
+            BREAK
+        END IF
+        i <- Order[k]
+        IF Weight[i] <= Remaining THEN          // whole package fits
+            Fraction[i] <- 1
+            Remaining <- Remaining - Weight[i]
+            TotalValue <- TotalValue + Value[i]
+        ELSE                                    // only part fits
+            Fraction[i] <- Remaining / Weight[i]
+            TotalValue <- TotalValue + Fraction[i] * Value[i]
+            Remaining <- 0
+        END IF
+    END FOR
+    RETURN Fraction, TotalValue
+END
