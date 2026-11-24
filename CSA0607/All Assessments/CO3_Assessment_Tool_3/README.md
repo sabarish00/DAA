@@ -3,8 +3,8 @@
 ## Academic Information
 - **Course**: CSA06 – Design and Analysis of Algorithms
 - **Assessment**: CO3 – Assessment Tool 3 (100 Points)
-- **Student Name**: R. Visshaal
-- **Registration Number**: 192421025
+- **Student Name**: T.S.Sabarish
+- **Registration Number**: 192371014
 - **Platform Case Study**: KartIQ Retail Data Analytics Platform
 
 ---
@@ -109,12 +109,7 @@ CO3_AT3/
 - Python 3.10 or higher.
 - Standard Python libraries only (`sys`, `os`, `json`, `time`, `random`, `typing`). No third-party dependencies required.
 
-### Setup
-Clone the repository:
-```bash
-git clone https://github.com/visshaalpvt/CO3-Assessment-Tool-3-Case-Study-Divide-and-Conquer-Engine-of-a-Retail-Data-Analytics-Platform.git
-cd CO3-Assessment-Tool-3-Case-Study-Divide-and-Conquer-Engine-of-a-Retail-Data-Analytics-Platform
-```
+
 
 ---
 

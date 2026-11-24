@@ -1,6 +1,6 @@
 # Design and Analysis of Algorithms (DAA)
 
-Welcome to the **Design and Analysis of Algorithms (DAA)** coursework repository by **Visshaal Natarajan**.
+Welcome to the **Design and Analysis of Algorithms (DAA)** coursework repository by **T.S.Sabarish-192371014**.
 
 This repository contains implementations, mathematical proofs, asymptotic case analyses, recurrence solutions, empirical benchmarking suites, and production system architectures for academic submissions.
 
@@ -50,7 +50,7 @@ CO1_Assignment
 
 ```bash
 # Clone the repository
-git clone https://github.com/visshaalpvt/DAA.git
+git clone https://github.com/sabarish00/DAA
 cd DAA/CO1_Assignment/Task_8_Implementation_Testing/Source_Code
 
 # Run unit tests

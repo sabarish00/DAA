@@ -25,7 +25,7 @@ Each student record is encapsulated as an immutable dataclass:
 @dataclass
 class StudentRecord:
     reg_no: str           # e.g., "REG2024BCSE000042" (Primary Search Key)
-    name: str             # e.g., "Visshaal Natarajan"
+    name: str             # e.g., "T.S.Sabarish"
     department: str       # e.g., "Computer Science and Engineering"
     cgpa: float           # e.g., 9.45
     year_of_study: int    # e.g., 3

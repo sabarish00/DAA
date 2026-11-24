@@ -4,8 +4,8 @@
 **Course:** Design and Analysis of Algorithms (DAA)  
 **Component:** Course Outcome 1 (CO1) Assignment  
 **Problem Domain:** Algorithmic Design, Mathematical Complexity Analysis, and Empirical Benchmarking of Search Algorithms for Student Registration Numbers  
-**Author:** Visshaal Natarajan  
-**Repository:** [github.com/visshaalpvt/DAA](https://github.com/visshaalpvt/DAA)  
+**Author:** T.S.Sabarish  
+**Repository:** [https://github.com/sabarish00/DAA](https://github.com/sabarish00/DAA)  
 
 ---
 

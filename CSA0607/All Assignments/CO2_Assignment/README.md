@@ -2,8 +2,8 @@
 
 **Course:** CSA06 — Design and Analysis of Algorithms  
 **Assignment:** Assignment 2 – CO2  
-**Student:** [Your Name] · [Your Registration Number]  
-**Institution:** [Your Institution]  
+**Student:** T.S.Sabarish · 192371014  
+**Institution:** Saveetha School of Engineering  
 **Deadline:** Confirm the current LMS announcement (class announcement: 100 points, due Oct 29)
 
 ---

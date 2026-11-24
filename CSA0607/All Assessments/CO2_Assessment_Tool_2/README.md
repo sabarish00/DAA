@@ -1,13 +1,12 @@
 # SentinelOps SOC Alert-Triage Module
 ## CSA06 — Design and Analysis of Algorithms | CO2 Debugging & Optimisation Task
 
-**Student Name:** R.VISSHAAL  
-**Registration Number:** 192421025  
+**Student Name:** T.S.Sabarish  
+**Registration Number:** 192371014
 **Course Code & Title:** CSA06 — Design and Analysis of Algorithms  
 **Assessment Component:** Continuous Assessment (CO2) — Debugging and Optimisation Task  
 **Department:** Computer Science and Engineering  
 **Submission Date:** 26 October 2026  
-**GitHub Repository:** [https://github.com/visshaalpvt/CO2-Assessment-Tool-2-Debugging-and-Optimization-Task-SOC-Alert-Triage-Module-of-SentinelOps.git](https://github.com/visshaalpvt/CO2-Assessment-Tool-2-Debugging-and-Optimization-Task-SOC-Alert-Triage-Module-of-SentinelOps.git)
 
 ---
 
